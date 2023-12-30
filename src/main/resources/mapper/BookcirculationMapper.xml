@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lms.mapper.BookcirculationMapper">
+
+    <resultMap id="BaseResultMap" type="com.lms.entity.Bookcirculation">
+            <id property="circulationid" column="CirculationID" jdbcType="INTEGER"/>
+            <result property="bookid" column="BookID" jdbcType="INTEGER"/>
+            <result property="unit" column="Unit" jdbcType="VARCHAR"/>
+            <result property="circulationaccountid" column="CirculationAccountID" jdbcType="INTEGER"/>
+            <result property="circulationtime" column="CirculationTime" jdbcType="TIMESTAMP"/>
+            <result property="returntime" column="ReturnTime" jdbcType="TIMESTAMP"/>
+            <result property="circulationreason" column="CirculationReason" jdbcType="VARCHAR"/>
+            <result property="applicant" column="Applicant" jdbcType="VARCHAR"/>
+            <result property="applicantcontact" column="ApplicantContact" jdbcType="VARCHAR"/>
+            <result property="remarks" column="Remarks" jdbcType="VARCHAR"/>
+            <result property="duetime" column="DueTime" jdbcType="TIMESTAMP"/>
+            <result property="circulationstatus" column="CirculationStatus" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        CirculationID,BookID,Unit,
+        CirculationAccountID,CirculationTime,ReturnTime,
+        CirculationReason,Applicant,ApplicantContact,
+        Remarks,DueTime,CirculationStatus
+    </sql>
+    <insert id="addSelective">
+        insert into bookcirculation
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="circulationid != null">CirculationID,</if>
+            <if test="bookid != null">BookID,</if>
+            <if test="unit != null">Unit,</if>
+            <if test="circulationaccountid != null">CirculationAccountID,</if>
+            <if test="circulationtime != null">CirculationTime,</if>
+            <if test="returntime != null">ReturnTime,</if>
+            <if test="circulationreason != null">CirculationReason,</if>
+            <if test="applicant != null">Applicant,</if>
+            <if test="applicantcontact != null">ApplicantContact,</if>
+            <if test="remarks != null">Remarks,</if>
+            <if test="duetime != null">DueTime,</if>
+            <if test="circulationstatus != null">CirculationStatus,</if>
+            <if test="user != null">user,</if>
+            <if test="bookinformation != null">bookinformation,</if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="circulationid != null">#{circulationid,jdbcType=INTEGER},</if>
+            <if test="bookid != null">#{bookid,jdbcType=INTEGER},</if>
+            <if test="unit != null">#{unit,jdbcType=VARCHAR},</if>
+            <if test="circulationaccountid != null">#{circulationaccountid,jdbcType=INTEGER},</if>
+            <if test="circulationtime != null">#{circulationtime,jdbcType=TIMESTAMP},</if>
+            <if test="returntime != null">#{returntime,jdbcType=TIMESTAMP},</if>
+            <if test="circulationreason != null">#{circulationreason,jdbcType=VARCHAR},</if>
+            <if test="applicant != null">#{applicant,jdbcType=VARCHAR},</if>
+            <if test="applicantcontact != null">#{applicantcontact,jdbcType=VARCHAR},</if>
+            <if test="remarks != null">#{remarks,jdbcType=VARCHAR},</if>
+            <if test="duetime != null">#{duetime,jdbcType=TIMESTAMP},</if>
+            <if test="circulationstatus != null">#{circulationstatus,jdbcType=INTEGER},</if>
+            <if test="user != null">#{user},</if>
+            <if test="bookinformation != null">#{bookinformation},</if>
+        </trim>
+    </insert>
+    <update id="updateSelective">
+        update bookcirculation
+        <set>
+            <if test="bookid != null">BookID=#{bookid,jdbcType=NUMERIC},</if>
+            <if test="unit != null">Unit=#{unit,jdbcType=VARCHAR},</if>
+            <if test="circulationaccountid != null">CirculationAccountID=#{circulationaccountid,jdbcType=NUMERIC},</if>
+            <if test="circulationtime != null">CirculationTime=#{circulationtime,jdbcType=TIMESTAMP},</if>
+            <if test="returntime != null">ReturnTime=#{returntime,jdbcType=TIMESTAMP},</if>
+            <if test="circulationreason != null">CirculationReason=#{circulationreason,jdbcType=VARCHAR},</if>
+            <if test="applicant != null">Applicant=#{applicant,jdbcType=VARCHAR},</if>
+            <if test="applicantcontact != null">ApplicantContact=#{applicantcontact,jdbcType=VARCHAR},</if>
+            <if test="remarks != null">Remarks=#{remarks,jdbcType=VARCHAR},</if>
+            <if test="duetime != null">DueTime=#{duetime,jdbcType=TIMESTAMP},</if>
+            <if test="circulationstatus != null">CirculationStatus=#{circulationstatus,jdbcType=NUMERIC},</if>
+            <if test="user != null">user=#{user},</if>
+            <if test="bookinformation != null">bookinformation=#{bookinformation},</if>
+        </set>
+        where circulationid = #{circulationid,jdbcType=NUMERIC}
+    </update>
+    <delete id="deleteByCirculationid">
+        delete
+        from bookcirculation
+        where CirculationID = #{circulationid,jdbcType=NUMERIC}
+    </delete>
+    <select id="selectByCirculationid" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from bookcirculation
+        where
+        CirculationID = #{circulationid,jdbcType=NUMERIC}
+    </select>
+
+    <select id="selectByMap" resultType="com.lms.entity.Bookcirculation" parameterType="map" >
+        select * from bookcirculation where 1 = 1
+        <if test="map.circulationaccountid != null and map.circulationaccountid != '' ">
+            and CirculationAccountID = #{map.circulationaccountid}
+        </if>
+        <if test="map.unit != null and map.unit != '' ">
+            <if test="map.circulationaccountid != null and map.circulationaccountid != '' ">
+                or Unit = #{map.unit}
+            </if>
+            <if test="map.circulationaccountid == null or map.circulationaccountid == '' ">
+                and Unit = #{map.unit}
+            </if>
+        </if>
+        order by CirculationID desc;
+    </select>
+
+
+</mapper>

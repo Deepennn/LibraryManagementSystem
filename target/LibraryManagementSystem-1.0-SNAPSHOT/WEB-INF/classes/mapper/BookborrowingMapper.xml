@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lms.mapper.BookborrowingMapper">
+
+    <resultMap id="BaseResultMap" type="com.lms.entity.Bookborrowing">
+            <id property="borrowid" column="BorrowID" jdbcType="INTEGER"/>
+            <result property="bookid" column="BookID" jdbcType="INTEGER"/>
+            <result property="borrowaccountid" column="BorrowAccountID" jdbcType="INTEGER"/>
+            <result property="borrowtime" column="BorrowTime" jdbcType="TIMESTAMP"/>
+            <result property="returntime" column="ReturnTime" jdbcType="TIMESTAMP"/>
+            <result property="borrowreason" column="BorrowReason" jdbcType="VARCHAR"/>
+            <result property="borrower" column="Borrower" jdbcType="VARCHAR"/>
+            <result property="borrowercontact" column="BorrowerContact" jdbcType="VARCHAR"/>
+            <result property="remarks" column="Remarks" jdbcType="VARCHAR"/>
+            <result property="duetime" column="DueTime" jdbcType="TIMESTAMP"/>
+            <result property="borrowstatus" column="BorrowStatus" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        BorrowID,BookID,BorrowAccountID,
+        BorrowTime,ReturnTime,BorrowReason,
+        Borrower,BorrowerContact,Remarks,
+        DueTime,BorrowStatus
+    </sql>
+
+    <select id="selectByMap" resultType="com.lms.entity.Bookborrowing" parameterType="map" >
+        select * from bookborrowing where 1 = 1
+        <if test="map.borrowaccountid != null and map.borrowaccountid != '' ">
+            and borrowaccountid = #{map.borrowaccountid}
+        </if>
+        order by borrowid desc
+    </select>
+    <delete id="deleteByBorrowid">
+        delete
+        from bookborrowing
+        where BorrowID = #{borrowid,jdbcType=NUMERIC}
+    </delete>
+    <select id="selectByBorrowid" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from bookborrowing
+        where
+        BorrowID = #{borrowid,jdbcType=NUMERIC}
+    </select>
+    <insert id="addSelective">
+        insert into bookborrowing
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="borrowid != null">BorrowID,</if>
+            <if test="bookid != null">BookID,</if>
+            <if test="borrowaccountid != null">BorrowAccountID,</if>
+            <if test="borrowtime != null">BorrowTime,</if>
+            <if test="returntime != null">ReturnTime,</if>
+            <if test="borrowreason != null">BorrowReason,</if>
+            <if test="borrower != null">Borrower,</if>
+            <if test="borrowercontact != null">BorrowerContact,</if>
+            <if test="remarks != null">Remarks,</if>
+            <if test="duetime != null">DueTime,</if>
+            <if test="borrowstatus != null">BorrowStatus,</if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="borrowid != null">#{borrowid,jdbcType=INTEGER},</if>
+            <if test="bookid != null">#{bookid,jdbcType=INTEGER},</if>
+            <if test="borrowaccountid != null">#{borrowaccountid,jdbcType=INTEGER},</if>
+            <if test="borrowtime != null">#{borrowtime,jdbcType=TIMESTAMP},</if>
+            <if test="returntime != null">#{returntime,jdbcType=TIMESTAMP},</if>
+            <if test="borrowreason != null">#{borrowreason,jdbcType=VARCHAR},</if>
+            <if test="borrower != null">#{borrower,jdbcType=VARCHAR},</if>
+            <if test="borrowercontact != null">#{borrowercontact,jdbcType=VARCHAR},</if>
+            <if test="remarks != null">#{remarks,jdbcType=VARCHAR},</if>
+            <if test="duetime != null">#{duetime,jdbcType=TIMESTAMP},</if>
+            <if test="borrowstatus != null">#{borrowstatus,jdbcType=INTEGER},</if>
+        </trim>
+    </insert>
+    <update id="updateSelective">
+        update bookborrowing
+        <set>
+            <if test="bookid != null">BookID=#{bookid,jdbcType=NUMERIC},</if>
+            <if test="borrowaccountid != null">BorrowAccountID=#{borrowaccountid,jdbcType=NUMERIC},</if>
+            <if test="borrowtime != null">BorrowTime=#{borrowtime,jdbcType=TIMESTAMP},</if>
+            <if test="returntime != null">ReturnTime=#{returntime,jdbcType=TIMESTAMP},</if>
+            <if test="borrowreason != null">BorrowReason=#{borrowreason,jdbcType=VARCHAR},</if>
+            <if test="borrower != null">Borrower=#{borrower,jdbcType=VARCHAR},</if>
+            <if test="borrowercontact != null">BorrowerContact=#{borrowercontact,jdbcType=VARCHAR},</if>
+            <if test="remarks != null">Remarks=#{remarks,jdbcType=VARCHAR},</if>
+            <if test="duetime != null">DueTime=#{duetime,jdbcType=TIMESTAMP},</if>
+            <if test="borrowstatus != null">BorrowStatus=#{borrowstatus,jdbcType=NUMERIC},</if>
+        </set>
+        where borrowid = #{borrowid,jdbcType=NUMERIC}
+    </update>
+
+</mapper>

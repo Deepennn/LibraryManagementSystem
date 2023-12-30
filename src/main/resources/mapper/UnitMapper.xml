@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lms.mapper.UnitMapper">
+
+    <resultMap id="BaseResultMap" type="com.lms.entity.Unit">
+            <id property="unitid" column="UnitID" jdbcType="INTEGER"/>
+            <result property="unitname" column="UnitName" jdbcType="VARCHAR"/>
+            <result property="contactperson" column="ContactPerson" jdbcType="VARCHAR"/>
+            <result property="contactnumber" column="ContactNumber" jdbcType="VARCHAR"/>
+            <result property="emailaddress" column="EmailAddress" jdbcType="VARCHAR"/>
+            <result property="contactaddress" column="ContactAddress" jdbcType="VARCHAR"/>
+            <result property="unittype" column="UnitType" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        UnitID,UnitName,ContactPerson,
+        ContactNumber,EmailAddress,ContactAddress,
+        UnitType
+    </sql>
+    <select id="selectByUnitid" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from unit
+        where
+        UnitID = #{unitid,jdbcType=NUMERIC}
+    </select>
+    <insert id="addSelective">
+        insert into unit
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="unitid != null">UnitID,</if>
+            <if test="unitname != null">UnitName,</if>
+            <if test="contactperson != null">ContactPerson,</if>
+            <if test="contactnumber != null">ContactNumber,</if>
+            <if test="emailaddress != null">EmailAddress,</if>
+            <if test="contactaddress != null">ContactAddress,</if>
+            <if test="unittype != null">UnitType,</if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="unitid != null">#{unitid,jdbcType=INTEGER},</if>
+            <if test="unitname != null">#{unitname,jdbcType=VARCHAR},</if>
+            <if test="contactperson != null">#{contactperson,jdbcType=VARCHAR},</if>
+            <if test="contactnumber != null">#{contactnumber,jdbcType=VARCHAR},</if>
+            <if test="emailaddress != null">#{emailaddress,jdbcType=VARCHAR},</if>
+            <if test="contactaddress != null">#{contactaddress,jdbcType=VARCHAR},</if>
+            <if test="unittype != null">#{unittype,jdbcType=VARCHAR},</if>
+        </trim>
+    </insert>
+    <select id="selectByUnitname" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from unit
+        where
+        UnitName = #{unitname,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByUnitid">
+        delete
+        from unit
+        where UnitID = #{unitid,jdbcType=NUMERIC}
+    </delete>
+    <update id="updateSelective">
+        update unit
+        <set>
+            <if test="unitname != null">UnitName=#{unitname,jdbcType=VARCHAR},</if>
+            <if test="contactperson != null">ContactPerson=#{contactperson,jdbcType=VARCHAR},</if>
+            <if test="contactnumber != null">ContactNumber=#{contactnumber,jdbcType=VARCHAR},</if>
+            <if test="emailaddress != null">EmailAddress=#{emailaddress,jdbcType=VARCHAR},</if>
+            <if test="contactaddress != null">ContactAddress=#{contactaddress,jdbcType=VARCHAR},</if>
+            <if test="unittype != null">UnitType=#{unittype,jdbcType=VARCHAR},</if>
+        </set>
+        where unitid = #{unitid,jdbcType=NUMERIC}
+    </update>
+    <select id="selectByMap" resultType="com.lms.entity.Unit" parameterType="map">
+        select * from unit where 1 = 1
+        <if test="map.unitid != null and map.unitid != '' ">
+            and UnitID = #{map.unitid}
+        </if>
+        <if test="map.unitname != null and map.unitname != '' ">
+            <bind name="unitname" value="'%' + map.unitname + '%'" />
+            and UnitName like #{unitname}
+        </if>
+    </select>
+</mapper>

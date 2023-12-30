@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lms.mapper.BookinformationMapper">
+
+    <resultMap id="BaseResultMap" type="com.lms.entity.Bookinformation">
+            <id property="bookid" column="BookID" jdbcType="INTEGER"/>
+            <result property="bookname" column="BookName" jdbcType="VARCHAR"/>
+            <result property="publicationdate" column="PublicationDate" jdbcType="DATE"/>
+            <result property="author" column="Author" jdbcType="VARCHAR"/>
+            <result property="publisher" column="Publisher" jdbcType="VARCHAR"/>
+            <result property="bookcategory" column="BookCategory" jdbcType="VARCHAR"/>
+            <result property="pagecount" column="PageCount" jdbcType="INTEGER"/>
+            <result property="price" column="Price" jdbcType="DECIMAL"/>
+            <result property="imagepath" column="ImagePath" jdbcType="VARCHAR"/>
+            <result property="bookcount" column="BookCount" jdbcType="INTEGER"/>
+            <result property="unitid" column="UnitID" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        BookID,BookName,PublicationDate,
+        Author,Publisher,BookCategory,
+        PageCount,Price,ImagePath,
+        BookCount,UnitID
+    </sql>
+
+    <select id="selectByMap" resultType="com.lms.entity.Bookinformation" parameterType="map">
+        select * from bookinformation where 1 = 1
+        <if test="map.bookid != null ">
+            and BookID = #{map.bookid}
+        </if>
+        <if test="map.unitid != null ">
+            and UnitID = #{map.unitid}
+        </if>
+        <if test="map.keyword != null and map.keyword != '' ">
+            <bind name="keyword" value="'%' + map.keyword + '%'" />
+            and BookName like #{keyword}
+        </if>
+        <if test="map.bookcategory != null and map.bookcategory != '' ">
+            and BookCategory = #{map.bookcategory}
+        </if>
+    </select>
+    <delete id="deleteByBookid">
+        delete
+        from bookinformation
+        where BookID = #{bookid,jdbcType=NUMERIC}
+    </delete>
+    <select id="selectByBookid" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from bookinformation
+        where
+        BookID = #{bookid,jdbcType=NUMERIC}
+    </select>
+    <select id="selectByBookname" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from bookinformation
+        where
+        BookName = #{bookname,jdbcType=VARCHAR}
+    </select>
+    <insert id="addSelective">
+        insert into bookinformation
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bookid != null">BookID,</if>
+            <if test="bookname != null">BookName,</if>
+            <if test="publicationdate != null">PublicationDate,</if>
+            <if test="author != null">Author,</if>
+            <if test="publisher != null">Publisher,</if>
+            <if test="bookcategory != null">BookCategory,</if>
+            <if test="pagecount != null">PageCount,</if>
+            <if test="price != null">Price,</if>
+            <if test="imagepath != null">ImagePath,</if>
+            <if test="bookcount != null">BookCount,</if>
+            <if test="unitid != null">UnitID,</if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bookid != null">#{bookid,jdbcType=INTEGER},</if>
+            <if test="bookname != null">#{bookname,jdbcType=VARCHAR},</if>
+            <if test="publicationdate != null">#{publicationdate,jdbcType=DATE},</if>
+            <if test="author != null">#{author,jdbcType=VARCHAR},</if>
+            <if test="publisher != null">#{publisher,jdbcType=VARCHAR},</if>
+            <if test="bookcategory != null">#{bookcategory,jdbcType=VARCHAR},</if>
+            <if test="pagecount != null">#{pagecount,jdbcType=INTEGER},</if>
+            <if test="price != null">#{price,jdbcType=DECIMAL},</if>
+            <if test="imagepath != null">#{imagepath,jdbcType=VARCHAR},</if>
+            <if test="bookcount != null">#{bookcount,jdbcType=INTEGER},</if>
+            <if test="unitid != null">#{unitid,jdbcType=INTEGER},</if>
+        </trim>
+    </insert>
+    <update id="updateSelective">
+        update bookinformation
+        <set>
+            <if test="bookname != null">BookName=#{bookname,jdbcType=VARCHAR},</if>
+            <if test="publicationdate != null">PublicationDate=#{publicationdate,jdbcType=TIMESTAMP},</if>
+            <if test="author != null">Author=#{author,jdbcType=VARCHAR},</if>
+            <if test="publisher != null">Publisher=#{publisher,jdbcType=VARCHAR},</if>
+            <if test="bookcategory != null">BookCategory=#{bookcategory,jdbcType=VARCHAR},</if>
+            <if test="pagecount != null">PageCount=#{pagecount,jdbcType=NUMERIC},</if>
+            <if test="price != null">Price=#{price,jdbcType=DECIMAL},</if>
+            <if test="imagepath != null">ImagePath=#{imagepath,jdbcType=VARCHAR},</if>
+            <if test="bookcount != null">BookCount=#{bookcount,jdbcType=NUMERIC},</if>
+            <if test="unitid != null">UnitID=#{unitid,jdbcType=NUMERIC},</if>
+        </set>
+        where bookid = #{bookid,jdbcType=NUMERIC}
+    </update>
+    <insert id="addBatch">
+        insert into bookinformation(BookID,BookName,PublicationDate,
+        Author,Publisher,BookCategory,
+        PageCount,Price,ImagePath,
+        BookCount,UnitID)
+        values
+        <foreach collection="bookinformationCollection" item="item" separator=",">
+            (#{item.bookid,jdbcType=NUMERIC},#{item.bookname,jdbcType=VARCHAR},#{item.publicationdate,jdbcType=TIMESTAMP},
+            #{item.author,jdbcType=VARCHAR},#{item.publisher,jdbcType=VARCHAR},#{item.bookcategory,jdbcType=VARCHAR},
+            #{item.pagecount,jdbcType=NUMERIC},#{item.price,jdbcType=DECIMAL},#{item.imagepath,jdbcType=VARCHAR},
+            #{item.bookcount,jdbcType=NUMERIC},#{item.unitid,jdbcType=NUMERIC})
+        </foreach>
+    </insert>
+</mapper>

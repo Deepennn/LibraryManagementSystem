@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+	 	http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd">
+
+    <!-- 配置扫描包 -->
+    <context:component-scan base-package="com.lms.controller">
+        <!-- 配置扫描 包含Controller 注解的类,相当于是配置了扫描的白名单-->
+        <context:include-filter type="annotation"
+                                expression="org.springframework.stereotype.Controller" />
+
+    </context:component-scan>
+
+    <bean
+            class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="viewClass"
+                  value="org.springframework.web.servlet.view.JstlView" />
+        <property name="prefix" value="/WEB-INF/" />
+        <property name="suffix" value=".jsp" />
+    </bean>
+
+    <!-- 启动 mvc 注解驱动 -->
+    <mvc:annotation-driven/>
+
+    <!-- 静态资源处理 -->
+    <mvc:default-servlet-handler/>
+    <!-- 配置静态资源的访问映射，此配置中的文件，将不被前端控制器拦截 -->
+    <mvc:resources location="/assets/" mapping="/assets/**" />
+    <!-- 设置静态资源文件springmvc不处理，否则会将js css等当做controller请求进行处理-->
+    <mvc:default-servlet-handler></mvc:default-servlet-handler>
+   <!-- <mvc:resources location="/upload/" mapping="/upload/**" />-->
+
+    <!-- 如果当前路径是/ 则交给相应的视图解析器直接解析为视图 -->
+    <mvc:view-controller path="/" view-name="toLogin" />
+
+    <!-- 文件上传 -->
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- 上传文件大小限制10M -->
+        <property name="maxUploadSize">
+            <value>10485760</value>
+        </property>
+        <!-- 请求的编码格式, 和 jsp 页面一致 -->
+        <property name="defaultEncoding">
+            <value>UTF-8</value>
+        </property>
+    </bean>
+</beans>

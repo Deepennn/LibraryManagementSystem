@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lms.mapper.StatisticsMapper">
+
+    <select id="selectByUnitidMonthly" resultType="com.lms.entity.Statistics">
+        SELECT COUNT(*) AS count, DATE_FORMAT(bookborrowing.borrowtime, '%Y-%m') AS name
+        FROM bookborrowing
+                 JOIN bookinformation ON bookborrowing.bookid = bookinformation.bookid
+                 JOIN unit ON bookinformation.unitid = unit.unitid
+        WHERE unit.unitid = #{unitid}
+        GROUP BY DATE_FORMAT(bookborrowing.borrowtime, '%Y-%m');
+    </select>
+
+    <select id="selectByUnitidYearly" resultType="com.lms.entity.Statistics">
+        SELECT COUNT(*) AS count, DATE_FORMAT(bookborrowing.borrowtime, '%Y') AS name
+        FROM bookborrowing
+                 JOIN bookinformation ON bookborrowing.bookid = bookinformation.bookid
+                 JOIN unit ON bookinformation.unitid = unit.unitid
+        WHERE unit.unitid = #{unitid}
+        GROUP BY DATE_FORMAT(bookborrowing.borrowtime, '%Y');
+    </select>
+
+    <select id="selectByUnitid" resultType="com.lms.entity.Statistics">
+        SELECT
+            name,
+            count,
+            availableCount,
+            (count + availableCount) AS totalCount
+        FROM (
+                 SELECT
+                     unit.unitname AS name,
+                     COUNT(*) AS count,
+                     (
+                         SELECT SUM(bookinformation.bookcount)
+                         FROM bookinformation
+                                  JOIN unit ON bookinformation.unitid = unit.unitid
+                         WHERE unit.unitid = #{unitid}
+                         GROUP BY unit.unitname
+                         HAVING COUNT(*) > 0
+                     ) AS availableCount
+                 FROM bookborrowing
+                          JOIN bookinformation ON bookborrowing.bookid = bookinformation.bookid
+                          JOIN unit ON bookinformation.unitid = unit.unitid
+                 WHERE unit.unitid = #{unitid}
+                 GROUP BY name
+                 HAVING COUNT(*) > 0
+             ) AS subquery;
+    </select>
+
+</mapper>

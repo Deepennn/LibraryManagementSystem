@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lms.mapper.UserMapper">
+
+    <resultMap id="BaseResultMap" type="com.lms.entity.User">
+            <id property="userid" column="UserID" jdbcType="INTEGER"/>
+            <result property="username" column="UserName" jdbcType="VARCHAR"/>
+            <result property="password" column="Password" jdbcType="VARCHAR"/>
+            <result property="realname" column="RealName" jdbcType="VARCHAR"/>
+            <result property="contactnumber" column="ContactNumber" jdbcType="VARCHAR"/>
+            <result property="email" column="Email" jdbcType="VARCHAR"/>
+            <result property="address" column="Address" jdbcType="VARCHAR"/>
+            <result property="workid" column="WorkID" jdbcType="INTEGER"/>
+            <result property="isregistered" column="IsRegistered" jdbcType="TINYINT"/>
+            <result property="createdtime" column="CreatedTime" jdbcType="TIMESTAMP"/>
+            <result property="gender" column="Gender" jdbcType="VARCHAR"/>
+            <result property="avatarpath" column="AvatarPath" jdbcType="VARCHAR"/>
+            <result property="accountstatus" column="AccountStatus" jdbcType="VARCHAR"/>
+            <result property="lastlogintime" column="LastLoginTime" jdbcType="TIMESTAMP"/>
+            <result property="unitid" column="UnitID" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        UserID,UserName,Password,
+        RealName,ContactNumber,Email,
+        Address,WorkID,IsRegistered,
+        CreatedTime,Gender,AvatarPath,
+        AccountStatus,LastLoginTime,UnitID
+    </sql>
+
+    <select id="selectByUsername" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user
+        where
+        UserName = #{username,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByUserid">
+        delete
+        from user
+        where UserID = #{userid,jdbcType=NUMERIC}
+    </delete>
+    <select id="selectByUserid" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user
+        where
+        UserID = #{userid,jdbcType=NUMERIC}
+    </select>
+    <insert id="addSelective">
+        insert into user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userid != null">UserID,</if>
+            <if test="username != null">UserName,</if>
+            <if test="password != null">Password,</if>
+            <if test="realname != null">RealName,</if>
+            <if test="contactnumber != null">ContactNumber,</if>
+            <if test="email != null">Email,</if>
+            <if test="address != null">Address,</if>
+            <if test="workid != null">WorkID,</if>
+            <if test="isregistered != null">IsRegistered,</if>
+            <if test="createdtime != null">CreatedTime,</if>
+            <if test="gender != null">Gender,</if>
+            <if test="avatarpath != null">AvatarPath,</if>
+            <if test="accountstatus != null">AccountStatus,</if>
+            <if test="lastlogintime != null">LastLoginTime,</if>
+            <if test="unitid != null">UnitID,</if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userid != null">#{userid,jdbcType=INTEGER},</if>
+            <if test="username != null">#{username,jdbcType=VARCHAR},</if>
+            <if test="password != null">#{password,jdbcType=VARCHAR},</if>
+            <if test="realname != null">#{realname,jdbcType=VARCHAR},</if>
+            <if test="contactnumber != null">#{contactnumber,jdbcType=VARCHAR},</if>
+            <if test="email != null">#{email,jdbcType=VARCHAR},</if>
+            <if test="address != null">#{address,jdbcType=VARCHAR},</if>
+            <if test="workid != null">#{workid,jdbcType=INTEGER},</if>
+            <if test="isregistered != null">#{isregistered,jdbcType=TINYINT},</if>
+            <if test="createdtime != null">#{createdtime,jdbcType=TIMESTAMP},</if>
+            <if test="gender != null">#{gender,jdbcType=VARCHAR},</if>
+            <if test="avatarpath != null">#{avatarpath,jdbcType=VARCHAR},</if>
+            <if test="accountstatus != null">#{accountstatus,jdbcType=VARCHAR},</if>
+            <if test="lastlogintime != null">#{lastlogintime,jdbcType=TIMESTAMP},</if>
+            <if test="unitid != null">#{unitid,jdbcType=INTEGER},</if>
+        </trim>
+    </insert>
+    <update id="updateSelective">
+        update user
+        <set>
+            <if test="username != null">UserName=#{username,jdbcType=VARCHAR},</if>
+            <if test="password != null">Password=#{password,jdbcType=VARCHAR},</if>
+            <if test="realname != null">RealName=#{realname,jdbcType=VARCHAR},</if>
+            <if test="contactnumber != null">ContactNumber=#{contactnumber,jdbcType=VARCHAR},</if>
+            <if test="email != null">Email=#{email,jdbcType=VARCHAR},</if>
+            <if test="address != null">Address=#{address,jdbcType=VARCHAR},</if>
+            <if test="workid != null">WorkID=#{workid,jdbcType=NUMERIC},</if>
+            <if test="isregistered != null">IsRegistered=#{isregistered,jdbcType=NUMERIC},</if>
+            <if test="createdtime != null">CreatedTime=#{createdtime,jdbcType=TIMESTAMP},</if>
+            <if test="gender != null">Gender=#{gender,jdbcType=VARCHAR},</if>
+            <if test="avatarpath != null">AvatarPath=#{avatarpath,jdbcType=VARCHAR},</if>
+            <if test="accountstatus != null">AccountStatus=#{accountstatus,jdbcType=VARCHAR},</if>
+            <if test="lastlogintime != null">LastLoginTime=#{lastlogintime,jdbcType=TIMESTAMP},</if>
+            <if test="unitid != null">UnitID=#{unitid,jdbcType=NUMERIC},</if>
+        </set>
+        where userid = #{userid,jdbcType=NUMERIC}
+    </update>
+    <select id="selectByMap" resultType="com.lms.entity.User" parameterType="map">
+        select * from user where 1 = 1
+        <if test="map.userid != null and map.userid != '' ">
+            and UserID = #{map.userid}
+        </if>
+        <if test="map.username != null and map.username != '' ">
+            and UserName = #{map.username}
+        </if>
+        <if test="map.password != null and map.password != '' ">
+            and Password = #{map.password}
+        </if>
+    </select>
+    <insert id="addBatch">
+        insert into user(UserID,UserName,Password,
+        RealName,ContactNumber,Email,
+        Address,WorkID,IsRegistered,
+        CreatedTime,Gender,AvatarPath,
+        AccountStatus,LastLoginTime,UnitID)
+        values
+        <foreach collection="userCollection" item="item" separator=",">
+            (#{item.userid,jdbcType=NUMERIC},#{item.username,jdbcType=VARCHAR},#{item.password,jdbcType=VARCHAR},
+            #{item.realname,jdbcType=VARCHAR},#{item.contactnumber,jdbcType=VARCHAR},#{item.email,jdbcType=VARCHAR},
+            #{item.address,jdbcType=VARCHAR},#{item.workid,jdbcType=NUMERIC},#{item.isregistered,jdbcType=NUMERIC},
+            #{item.createdtime,jdbcType=TIMESTAMP},#{item.gender,jdbcType=VARCHAR},#{item.avatarpath,jdbcType=VARCHAR},
+            #{item.accountstatus,jdbcType=VARCHAR},#{item.lastlogintime,jdbcType=TIMESTAMP},#{item.unitid,jdbcType=NUMERIC})
+        </foreach>
+    </insert>
+
+</mapper>
